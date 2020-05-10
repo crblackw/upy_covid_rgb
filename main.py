@@ -1,7 +1,6 @@
 import machine
 import neopixel
 import utime as time
-import urandom as random
 import urequests as requests
 import ujson as json
 import os
@@ -25,7 +24,6 @@ def main():
             np = neopixel.NeoPixel(machine.Pin(2), 7)
             np.fill((0, 0, 0))
             np.write()
-            n = np.n
 
             do_connect()
 
@@ -42,20 +40,21 @@ def main():
 
             update_pixels(data, np)
 
-            time.sleep(60)
+            time.sleep(3600)
     except KeyboardInterrupt:
         pass
 
 
 def update_pixels(data, np):
     for index, row in enumerate(data):
-        if row["rate"] > 0:
-            np[index] = (15, 0, 0)
-        elif row["rate"] < 0:
-            np[index] = (0, 15, 0)
-        else:
-            np[index] = (0, 0, 15)
-        np.write()
+        if index < np.n:
+            if row["rate"] > 0:
+                np[index] = (15, 0, 0)
+            elif row["rate"] < 0:
+                np[index] = (0, 15, 0)
+            else:
+                np[index] = (0, 0, 15)
+            np.write()
 
 
 def load_data():
@@ -87,22 +86,27 @@ def write_data(data):
 
 
 def append_data(data, latest):
-    if not any(latest["timestamp"] for latest in data):
-        data.insert(0, latest)
-        for index, row in enumerate(data):
-            if (index + 1) <= RECORD_COUNT:
-                last = data[index + 1]["infected"]
-                curr = row["infected"]
-                row["new"] = curr - last
-            else:
-                pass
-        for index, row in enumerate(data):
-            if (index + 1) <= RECORD_COUNT:
-                last = data[index + 1]["new"]
-                curr = row["new"]
-                row["rate"] = curr - last
-            else:
-                pass
+    if not any(d["timestamp"] == latest["timestamp"] for d in data):
+        if timestamp_to_day(latest["timestamp"]) > timestamp_to_day(
+            data[0]["timestamp"]
+        ):
+            data.insert(0, latest)
+            for index, row in enumerate(data):
+                if (index + 1) <= RECORD_COUNT:
+                    last = data[index + 1]["infected"]
+                    curr = row["infected"]
+                    row["new"] = curr - last
+                else:
+                    pass
+            for index, row in enumerate(data):
+                if (index + 1) <= RECORD_COUNT:
+                    last = data[index + 1]["new"]
+                    curr = row["new"]
+                    row["rate"] = curr - last
+                else:
+                    pass
+        else:
+            print("latest data less than a day old")
 
     else:
         print("timestamp already exists")
@@ -135,35 +139,8 @@ def pull_daily_covid():
     return {"timestamp": data["lastUpdatedAtApify"], "infected": data["infected"]}
 
 
-def randint(min, max):
-    span = max - min + 1
-    div = 0x3FFFFFFF // span
-    offset = random.getrandbits(30) // div
-    val = min + offset
-    return val
-
-
-def random_sparkle():
-    for i in range(n):
-        red = randint(0, 30)
-        green = randint(0, 30)
-        blue = randint(0, 30)
-        print(i, red, green, blue)
-        np[i] = (red, green, blue)
-        np.write()
-        time.sleep(0.1)
-
-
-def chase(red=0, green=0, blue=0):
-    if (red == 0) and (green == 0) and (blue == 0):
-        red = randint(0, 30)
-        green = randint(0, 30)
-        blue = randint(0, 30)
-    for i in range(1, n):
-        print("i: %i, r: %i, g: %i, b: %i" % (i, red, green, blue))
-        np[i] = (red, green, blue)
-        np.write()
-        time.sleep(0.1)
+def timestamp_to_day(ts):
+    return int(str(ts).split("T")[0].replace("-", ""))
 
 
 if __name__ == "__main__":

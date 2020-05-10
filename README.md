@@ -8,3 +8,17 @@ User to define a 'secrets.py' file which includes the following:
 
     ssid = {put your wifi ssid here}
     pwd = {put your wifi password here}
+
+## Tasks
+
+- [x] Connect to wifi.
+- [x] Get the latest number of new Covid cases
+- [x] Store the previous number of new cases in yesterday's variable
+- [x] Shift all pixels back one. Drop the last pixel if > num of pixels
+- [x] Compare today to yesterday, if > then set pixel 0 as red. Othwewise green.
+- [x] Check again in 24 hrs.
+- [ ] Add comments to code.
+
+## Community Message
+
+If you find this repository and think that you have a better or more interesting way to do something, please feel free to comment. If you may potentially be a first time contributor to a project, please use this project to experiment with that! This is a first project for me where I tried to wrap it up into something useable and am open to any feedback.

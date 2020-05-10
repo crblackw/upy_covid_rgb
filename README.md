@@ -21,7 +21,7 @@ User to define a 'secrets.py' file which includes the following:
 
 ## Issues
 
-* Occaisonly LED's blank and re-configure. Assuming this is a reboot but not sure the trigger. Potentially memory issue.
+- Occaisonly LED's blank and re-configure. Assuming this is a reboot but not sure the trigger. Potentially memory issue.
 
 ## Community Message
 

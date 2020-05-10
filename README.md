@@ -19,6 +19,10 @@ User to define a 'secrets.py' file which includes the following:
 - [x] Check again in 24 hrs.
 - [ ] Add comments to code.
 
+## Issues
+
+* Occaisonly LED's blank and re-configure. Assuming this is a reboot but not sure the trigger. Potentially memory issue.
+
 ## Community Message
 
 If you find this repository and think that you have a better or more interesting way to do something, please feel free to comment. If you may potentially be a first time contributor to a project, please use this project to experiment with that! This is a first project for me where I tried to wrap it up into something useable and am open to any feedback.
